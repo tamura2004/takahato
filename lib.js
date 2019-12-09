@@ -28,18 +28,25 @@ class Creature {
     this.v.rotate(random(PI));
     other.v.rotate(random(PI));
 
+    // 自分も相手もタカ（双方にダメージ）
     if (this.type === "TAKA") {
       if (other.type === "TAKA") {
         this.size *= 0.95;
         other.size *= 0.95;
+
+        // 自分がタカ、相手がハト（自分だけ成長）
       } else {
         if (this.size < R * 3) this.size *= 1.05;
         other.size *= 0.95;
       }
     } else {
+
+      // 自分も相手もハト（双方が成長）
       if (other.type === "HATO") {
         if (this.size < R * 2) this.size *= 1.05;
         if (other.size < R * 2) other.size *= 1.05;
+
+        // 自分がハト、相手がタカ（自分だけダメージ）
       } else {
         if (other.size < R * 3) other.size *= 1.05;
         this.size *= 0.95;
@@ -57,10 +64,13 @@ class Creatures extends Map {
     this.set(creature.id, creature);
   }
   create() {
+    // 3割でタカ、7割でハト
     const type = random() < 0.3 ? "TAKA" : "HATO";
     const creature = new Creature(type);
     this.add(creature);
   }
+
+  // 自分の近くに子供を作成
   clone(parent) {
     if (this.values().length > 100) return;
     parent.size *= 0.8;
@@ -73,7 +83,11 @@ class Creatures extends Map {
   }
   move() {
     for (const creature of this.values()) {
+
+      // 小さくなったら消す
       if (creature.size < 16) this.remove(creature);
+
+      // 大きくなったら一定確率で子供を生成
       if (creature.size > R * 2.5 && random() < 0.01) this.clone(creature);
       creature.move();
     }
@@ -83,6 +97,7 @@ class Creatures extends Map {
     for (let c1 of this.values()) {
       for (let c2 of this.values()) {
         if (c1.id === c2.id) continue;
+        // 衝突判定
         if (c1.p.dist(c2.p) < R) c1.collid(c2);
       }
     }
@@ -97,4 +112,3 @@ class Creatures extends Map {
     return this.values.filter(c => c.type === "HATO");
   }
 }
-
