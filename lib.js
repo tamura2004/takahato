@@ -14,6 +14,35 @@ class Creatures extends Map {
     for (const creature of this.values()) {
       creature.move();
     }
+    this.collid();
+  }
+  collid() {
+    for (const c1 of this.values()) {
+      for (const c2 of this.values()) {
+        if (c1.id !== c2.id && c1.p.dist(c2.p) <= R) {
+          if (c1.type === "TAKA" && c2.type === "TAKA") {
+            this.remove(c2);
+          // } else if (c1.type == "HATO" && c2.type == "HATO") {
+          //   const child = new Creature("HATO");
+          //   child.p.x = c1.p.x;
+          //   child.p.y = c1.p.y;
+          //   this.add(child);
+          // } else if (c1.type === "TAKA" && c2.type === "HATO") {
+          //   c2.path = [];
+          //   const child = new Creature("HATO");
+          //   child.p.x = c1.p.x;
+          //   child.p.y = c1.p.y;
+          //   this.add(child);
+          // } else {
+          //   c1.path = [];
+          //   const child = new Creature("HATO");
+          //   child.p.x = c1.p.x;
+          //   child.p.y = c1.p.y;
+          //   this.add(child);
+          }
+        }
+      }
+    }
   }
   draw() {
     for (const creature of this.values()) {
@@ -23,12 +52,18 @@ class Creatures extends Map {
 }
 
 class Creature {
-  constructor() {
+  constructor(type) {
     this.p = createVector(random(windowWidth), random(windowHeight));
     this.path = [];
     this.wait = random(100);
     this.id = random(100000000);
-    this.type = "HATO";
+    this.type = type;
+  }
+  goto(q) {
+    for (let i = 1; i <= STEP; i++) {
+      const x = i / STEP;
+      this.path.push(p5.Vector.lerp(this.p, q, easing(x)));
+    }
   }
   move() {
     if (this.path.length > 0) {
@@ -42,10 +77,8 @@ class Creature {
       const x = random(R, windowWidth - R);
       const y = random(R, windowHeight - R);
       const q = createVector(x, y);
-      for (let i = 1; i <= STEP; i++) {
-        const x = i / STEP;
-        this.path.push(p5.Vector.lerp(this.p, q, easing(x)));
-      }
+      this.goto(q);
+
       // 待ち時間を決める
       this.wait = random(MAX_WAIT);
     }

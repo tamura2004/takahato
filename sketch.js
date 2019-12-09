@@ -1,6 +1,6 @@
 // タカハトゲームのシミュレータ
 const STEP = 300;
-const R = 20;
+const R = 32;
 const MAX_WAIT = 30;
 const NUM = 10;
 
