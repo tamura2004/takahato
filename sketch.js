@@ -39,7 +39,7 @@ function draw() {
   fill("white");
   stroke("white");
     
-  textSize(96);
+  textSize(192);
   textAlign(CENTER, CENTER);
   for (let y = 0; y < 4; y++) {
     for (let x = 0; x < 2; x++) {
@@ -51,7 +51,7 @@ function draw() {
     }
   }
 
-  textSize(24);
+  textSize(48);
   textAlign(LEFT, TOP);
   for (let y = 0; y < 4; y++) {
     const top = y * h + 2 * gap;
